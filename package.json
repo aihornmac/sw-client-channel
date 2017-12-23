@@ -1,6 +1,6 @@
 {
   "name": "sw-client-channel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A tool for communication between service worker and browser pages",
   "scripts": {
     "build": "babel src --out-dir lib",
