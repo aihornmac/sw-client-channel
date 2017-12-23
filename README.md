@@ -181,6 +181,19 @@ channel.emit(clientId, 'reload page', [/*force = */true]);
 channel.emit(clientId, 'give me an array buffer', [arrayBuffer], [arrayBuffer]);
 ```
 
+#### `broadcast(name, args)`
+Send an request to all clients with args. It is handled by client's
+* `channel.on(name, handler)`
+
+**NOTE: ** it doesn't accept transferList
+
+##### Example
+```js
+channel.emit(clientId, 'reload page', [/*force = */true]);
+
+channel.emit(clientId, 'give me an array buffer', [arrayBuffer], [arrayBuffer]);
+```
+
 #### `request(clientId, name, args[, transferList]): Promise`
 Send an request to certain client with args and optionally transferList and return a promise.
 It is responeded by clients's
