@@ -23,25 +23,52 @@ navigator.serviceWorker
     const channel = new ClientChannel(registration.active);
 
     channel.on('hi', () => {
-      console.log('sw says hi everyone');
+      console.log('sw says hi');
+      const arrayBuffer = new ArrayBuffer();
+      channel.request('transferable', [arrayBuffer], [arrayBuffer])
+        .then(buffer => {
+          console.log(arrayBuffer === buffer);
+          channel.emit('bye');
+        });
     });
 
-    channel.on('bye', (firstName, lastName) => {
-      console.log(`${firstName} ${lastName} says bye`);
+    channel.on('bye', () => {
+      console.log(`sw says bye`);
     });
 
-    channel.respond('transferable', async arrayBuffer => {
-      // await do sth...
-      const result = { data: arrayBuffer };
-      const transferList = [arrayBuffer];
-      return [result, transferList];
-    }, true);
+    channel.emit('hi');
   });
 ```
 
 ```js
 import SWChannel from 'lib/sw-client-channel/sw';
 
+SWChannel.on('hi', clientId => {
+  console.log(`client ${clientId} says hi`);
+  SWChannel.emit(clientId, 'hi');
+});
+
+SWChannel.on('bye', clientId => {
+  console.log(`client ${clientId} says bye`);
+  channel.emit('bye');
+});
+
+SWChannel.respond('transferable', async arrayBuffer => {
+  // await do sth...
+  const result = arrayBuffer;
+  const transferList = [arrayBuffer];
+  return [result, transferList];
+}, true);
+```
+
+should print
+
+```
+client <clientId> says hi
+sw says hi
+true
+client <clientId> says bye
+sw says bye
 ```
 
 ## API in pages
